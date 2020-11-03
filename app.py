@@ -1,35 +1,34 @@
 import os
+from os.path import join, dirname
 import flask
 import flask_socketio
+import flask_sqlalchemy
+from dotenv import load_dotenv
 
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
+dotenv_path = join(dirname(__file__), 'sql.env')
+load_dotenv(dotenv_path)
+database_uri = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 
-@app.route('/')
+db = flask_sqlalchemy.SQLAlchemy(app)
+def init_db(app):
+    db.init_app(app)
+    db.app = app
+    db.create_all()
+    db.session.commit()
+    
+import bot as Bot
+import models
+
+@app.route('/', methods=['GET', 'POST'])
 def hello():
     return flask.render_template('index.html')
 
-@socketio.on('connect')
-def on_connect():
-    print('Someone connected!')
-    socketio.emit('connected', {
-        'test': 'Connected'
-    })
-
-@socketio.on('disconnect')
-def on_disconnect():
-    print ('Someone disconnected!')
-
-@socketio.on('new number')
-def on_new_number(data):
-    print("Got an event for new number with data:", data)
-    rand_number = data['number']
-    socketio.emit('number received', {
-        'number': rand_number
-    })
-
-if __name__ == '__main__': 
+if __name__ == '__main__':
+    init_db(app)
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),
