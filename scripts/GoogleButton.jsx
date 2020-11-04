@@ -3,11 +3,14 @@ import GoogleLogin from 'react-google-login';
 import Socket from './Socket';
 
 export default function GoogleButton(params) {
+
   function success(response) {
     const { name } = response.profileObj;
     const { email } = response.profileObj;
+    const { accessToken } = response.profileObj;
     let profilePic;
     
+    console.log(response);
     if ('imageUrl' in response.profileObj) {
       profilePic = response.profileObj.imageUrl;
     } else {
@@ -36,8 +39,8 @@ export default function GoogleButton(params) {
       buttonText="Login"
       onSuccess={success}
       onFailure={failure}
+      isSignedIn={true}
       cookiePolicy="single_host_origin"
-      redirectUri
     />
   );
 }

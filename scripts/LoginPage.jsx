@@ -1,6 +1,5 @@
 import * as React from 'react';
 import GoogleButton from './GoogleButton';
-
 export default function LoginPage(params)
 {
     
@@ -8,6 +7,7 @@ export default function LoginPage(params)
     const setName = params.setName;
     const setProfilePic = params.setProfilePic;
     const setEmail = params.setEmail;
+
     return (
         <div>
             <h1>
