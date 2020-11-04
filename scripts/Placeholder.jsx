@@ -1,20 +1,18 @@
 import * as React from 'react';
 import GoogleButton from './GoogleButton';
-export default function LoginPage(params)
+
+export default function Placeholder(params)
 {
-    
+    const name = params.name;
+    const email = params.email;
     const setAuthenticated = params.setAuthenticated;    
     const setName = params.setName;
     const setProfilePic = params.setProfilePic;
     const setEmail = params.setEmail;
     const authenticated = params.authenticated;
+    
     return (
         <div>
-            <h1 className="loginTitle">
-                AgendaSync
-            </h1>
-            <img src="../static/agenda.png" alt="agenda">
-            </img>
             <GoogleButton
                 className="googleButton"
                 setAuthenticated={setAuthenticated}
@@ -23,6 +21,11 @@ export default function LoginPage(params)
                 setProfilePic = {setProfilePic}
                 authenticated = {authenticated}
             />
+            <h1>
+                {name}<br/>
+                {email}
+            </h1>
         </div>
-    );
+        
+        );
 }

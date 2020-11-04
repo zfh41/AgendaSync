@@ -1,6 +1,7 @@
 import React from 'react';
 import Socket from './Socket';
 import LoginPage from './LoginPage';
+import Placeholder from './Placeholder';
 export function Content() {
 
     const [authenticated,setAuthenticated] = React.useState(false);
@@ -14,15 +15,16 @@ export function Content() {
         if(authenticated)
         {
             page = React.createElement(
-                "div",
-                {},
-                React.createElement(
-                    "h1",
-                    {},
+                Placeholder,
+                {
+                     setAuthenticated,
+                    setName,
+                    setEmail,
+                    setProfilePic,
+                    authenticated,
                     name,
                     email
-                    )
-                    
+                }
                 );//placeholder for actual calendar page
         }
         
@@ -34,7 +36,8 @@ export function Content() {
                     setAuthenticated,
                     setName,
                     setEmail,
-                    setProfilePic
+                    setProfilePic,
+                    authenticated
                 }
                 );
         }
