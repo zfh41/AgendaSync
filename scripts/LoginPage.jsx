@@ -9,14 +9,13 @@ export default function LoginPage(params)
     const setEmail = params.setEmail;
     const authenticated = params.authenticated;
     return (
-        <div>
+        <div className="loginBox">
             <h1 className="loginTitle">
                 AgendaSync
             </h1>
-            <img src="../static/agenda.png" alt="agenda">
-            </img>
+            <img  className="logo" src="../static/agenda.png" alt="agenda">
+            </img><br/>
             <GoogleButton
-                className="googleButton"
                 setAuthenticated={setAuthenticated}
                 setName = {setName}
                 setEmail = {setEmail}

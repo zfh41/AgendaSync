@@ -60,8 +60,9 @@ export default function GoogleButton(params) {
   {
     return (
     <GoogleLogin
+      className="googleLoginButton"
       clientId="30624731772-clsbuhec4ag6bukbqpsuf1qppc3g3n5r.apps.googleusercontent.com"
-      buttonText="Login"
+      buttonText="Log in with Google"
       onSuccess={success}
       onFailure={failure}
       isSignedIn={true}
@@ -73,7 +74,7 @@ export default function GoogleButton(params) {
   {
     return (
     <GoogleLogout
-      fetchBasicProfile={false}
+      className="googleLogoutButton"
       isSignedIn={false}
       clientId="30624731772-clsbuhec4ag6bukbqpsuf1qppc3g3n5r.apps.googleusercontent.com"
       buttonText="Logout"

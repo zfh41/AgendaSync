@@ -17,7 +17,7 @@ export function Content() {
             page = React.createElement(
                 Placeholder,
                 {
-                     setAuthenticated,
+                    setAuthenticated,
                     setName,
                     setEmail,
                     setProfilePic,
