@@ -6,42 +6,32 @@ import Socket from './Socket';
 export default function GoogleButton(params) {
 
   function success(response) {
-    const { name } = response.profileObj;
-    const { email } = response.profileObj;
-    const { accessToken } = response.profileObj;
+    const { name } = "n";//response.profileObj;
+    const { email } = "e";//response.profileObj;
+    const { accessToken } = "a";//response;
+    const { code } = response;
     let profilePic;
     
-    console.log(response);
-    console.log('login');
-    if ('imageUrl' in response.profileObj) {
-      profilePic = response.profileObj.imageUrl;
-    } else {
-      profilePic = 'static/profile_pic.png';
-    }
+   
 
     Socket.emit('login', {
-      name,
-      email,
-      profilePic,
+      "code":code
     });
 
     params.setAuthenticated(true);
-    params.setName(name);
-    params.setProfilePic(profilePic);
-    params.setEmail(email);
+    params.setCode(code);
   }
 
   function failure() {
     params.setAuthenticated(false);
   }
 
-  function logout(response){
+  function logout(){
     const name = "";
     const email = "";
     const accessToken= "";
     let profilePic = "";
     console.log("logout");
-    console.log(response);
     Socket.emit('logout', {
       name,
       email,
@@ -49,9 +39,6 @@ export default function GoogleButton(params) {
     });
 
     params.setAuthenticated(false);
-    params.setName(name);
-    params.setProfilePic(profilePic);
-    params.setEmail(email);
   }
   
 
@@ -67,6 +54,11 @@ export default function GoogleButton(params) {
       onFailure={failure}
       isSignedIn={true}
       cookiePolicy="single_host_origin"
+       responseType="code"
+      accessType="offline"
+      prompt="consent"
+      scope={"https://www.googleapis.com/auth/calendar.events"}
+      
     />
     );
   }

@@ -8,6 +8,7 @@ export function Content() {
     const [name,setName] = React.useState("");
     const [email,setEmail] = React.useState("");
     const [profilePic,setProfilePic] = React.useState("");
+    const [code,setCode] = React.useState("");
     let page;
     
     function selectPage()
@@ -37,7 +38,8 @@ export function Content() {
                     setName,
                     setEmail,
                     setProfilePic,
-                    authenticated
+                    authenticated,
+                    setCode
                 }
                 );
         }

@@ -8,6 +8,7 @@ export default function LoginPage(params)
     const setProfilePic = params.setProfilePic;
     const setEmail = params.setEmail;
     const authenticated = params.authenticated;
+    const setCode = params.setCode;
     return (
         <div className="loginBox">
             <h1 className="loginTitle">
@@ -21,6 +22,7 @@ export default function LoginPage(params)
                 setEmail = {setEmail}
                 setProfilePic = {setProfilePic}
                 authenticated = {authenticated}
+                setCode = {setCode}
             />
         </div>
     );
