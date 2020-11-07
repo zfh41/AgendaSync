@@ -17,7 +17,9 @@ export default function GoogleButton(params) {
     Socket.emit('login', {
       "code":code
     });
-
+    Socket.emit('sendCalendar',{ 
+      "email":"sb989@njit.edu"  //hardcoded value; email address cannot be retrieved on client side when auth
+    });                         //code is retreived on client side.  
     params.setAuthenticated(true);
     params.setCode(code);
   }
