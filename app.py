@@ -30,10 +30,15 @@ import models
 @app.route('/', methods=['GET', 'POST'])
 def hello():
     return flask.render_template('index.html')
-    
+#twilio
+
+ADD_TODO = "add todo"
+LIST_TODO = "list todo"
+START_TODO = "start date"
+DUE_DATE = "due date"
+
 @app.route('/bot', methods=['POST'])
 def bot():
-    #twilio
     incoming_msg = request.values.get('Body', '').lower()
     resp = MessagingResponse()
     msg = resp.message()
