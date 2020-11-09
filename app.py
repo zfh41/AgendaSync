@@ -4,6 +4,8 @@ import flask
 import flask_socketio
 import flask_sqlalchemy
 from dotenv import load_dotenv
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
 
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
@@ -30,7 +32,23 @@ def hello():
 
 @socketio.on("login")
 def login(data):
-    print(data)
+    auth_code = data['code']
+    print(auth_code)
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=['openid', 'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/calendar.events',
+        'https://www.googleapis.com/auth/calendar'],
+        redirect_uri = "https://66b3860890e243e18ab6f0967df663ca.vfs.cloud9.us-east-1.amazonaws.com"
+        )
+    # auth_uri = flow.authorization_url()
+    # print(auth_uri)
+    flow.fetch_token(code=auth_code)
+    cred = flow.credentials
+    print(cred.token)
+    print(cred.refresh_token)
+
 
 @socketio.on("sendCalendar")
 def sendCalendar(data): #when calendar api code is finished it will have to send this in the data sent back to client

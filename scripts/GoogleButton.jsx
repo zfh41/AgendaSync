@@ -59,7 +59,7 @@ export default function GoogleButton(params) {
        responseType="code"
       accessType="offline"
       prompt="consent"
-      scope={"https://www.googleapis.com/auth/calendar.events"}
+      scope={"https://www.googleapis.com/auth/calendar"}
       
     />
     );
