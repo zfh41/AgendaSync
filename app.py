@@ -11,6 +11,8 @@ from twilio.twiml.messaging_response import MessagingResponse
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 
+USERS_UPDATED_CHANNEL = 'users updated'
+
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
@@ -64,6 +66,13 @@ def bot():
     return str(resp)
     
 
+def add_new_person_to_db(email):
+        db.session.add(models.Person(email));
+        db.session.commit();
+
+def add_new_todo_to_db(todo, start_todo, due_date):
+        db.session.add(models.Todo(todo, start_todo, due_date));
+        db.session.commit();
 
 
 @socketio.on("login with code")
@@ -78,18 +87,24 @@ def login(data):
         'https://www.googleapis.com/auth/calendar'],
         redirect_uri = "https://66b3860890e243e18ab6f0967df663ca.vfs.cloud9.us-east-1.amazonaws.com"
         )
-    # auth_uri = flow.authorization_url()
-    # print(auth_uri)
+        #TODO: will probably need to put redirect_uri in an env file at some point
     flow.fetch_token(code=auth_code)
     cred = flow.credentials
     print(cred.token)
     print(cred.refresh_token)
-
+    #TODO: retreive user email,name (and profilepic?) and send to frontend
+    # use email in add_new_person_to_db(email) if theyre new
+    # do google calendar stuff
 
 @socketio.on("login with email")
 def loginWithEmail(data):
     email = data['email']
     print(email)
+    #add_new_person_to_db(email)
+    #TODO: use email to retreive user info and tokens from database 
+    # send stuff to frontend
+    # do google calendar stuff
+    
     
 @socketio.on("sendCalendar")
 def sendCalendar(data): #when calendar api code is finished it will have to send this in the data sent back to client
@@ -107,7 +122,7 @@ def addToDoList(data):
     print(data)
 
 if __name__ == '__main__':
-    #init_db(app)
+    init_db(app)
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),

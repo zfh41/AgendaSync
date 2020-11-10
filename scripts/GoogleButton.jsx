@@ -8,6 +8,7 @@ export default function GoogleButton(params) {
   console.log(clientId);
   function success(response) {
     const { code } = response;
+
     if(code != undefined)
     {
       Socket.emit('login with code', {
@@ -23,7 +24,7 @@ export default function GoogleButton(params) {
       });//after login; every page refresh rerturns profile instead
     }
     Socket.emit('sendCalendar',{ 
-      "email":"sb989@njit.edu"  //hardcoded value; email address cannot be retrieved on client side when auth
+      "email":"jme5@njit.edu"  //hardcoded value; email address cannot be retrieved on client side when auth
     });                         //code is retreived on client side.  
     params.setAuthenticated(true);
     params.setCode(code);
@@ -75,7 +76,7 @@ export default function GoogleButton(params) {
     <GoogleLogout
       className="googleLogoutButton"
       isSignedIn={false}
-      clientId="30624731772-clsbuhec4ag6bukbqpsuf1qppc3g3n5r.apps.googleusercontent.com"
+      clientId={clientId}
       buttonText="Logout"
       onLogoutSuccess={logout}
       onFailure={failure}
