@@ -1,9 +1,13 @@
 import os
 from os.path import join, dirname
+from twilio.rest import Client
 import flask
+from flask import request
+import requests
 import flask_socketio
 import flask_sqlalchemy
 from dotenv import load_dotenv
+from twilio.twiml.messaging_response import MessagingResponse
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 
@@ -64,7 +68,7 @@ def bot():
 
 
 
-@socketio.on("login")
+@socketio.on("login with code")
 def login(data):
     auth_code = data['code']
     print(auth_code)
@@ -76,13 +80,17 @@ def login(data):
         'https://www.googleapis.com/auth/calendar'],
         redirect_uri = "https://66b3860890e243e18ab6f0967df663ca.vfs.cloud9.us-east-1.amazonaws.com"
         )
-    # auth_uri = flow.authorization_url()
-    # print(auth_uri)
+
     flow.fetch_token(code=auth_code)
     cred = flow.credentials
     print(cred.token)
     print(cred.refresh_token)
 
+
+@socketio.on("login with email")
+def loginWithEmail(data):
+    email = data['email']
+    print(email)
 
 @socketio.on("sendCalendar")
 def sendCalendar(data): #when calendar api code is finished it will have to send this in the data sent back to client
