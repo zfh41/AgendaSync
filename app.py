@@ -25,6 +25,7 @@ def init_db(app):
 import bot as Bot
 import models
 
+
 @app.route('/', methods=['GET', 'POST'])
 def hello():
     return flask.render_template('index.html')
