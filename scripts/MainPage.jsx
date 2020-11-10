@@ -13,10 +13,20 @@ export default function MainPage(params)
     const setProfilePic = params.setProfilePic;
     const setEmail = params.setEmail;
     const authenticated = params.authenticated;
-    console
-    const [selected,setSelected] = React.useState(
-        React.createElement(UserCalendar,{"userURL":userURL})
-        );
+    
+    const [selected,setSelected] = React.useState("");
+    
+    function setUpDefaultLook()
+    {
+        React.useEffect(()=>{
+            if(userURL == "")
+                return;
+            setSelected(React.createElement(UserCalendar,{"userURL":userURL}));
+
+        },[userURL]);
+    }
+    
+    setUpDefaultLook();
         
     return (
         <div>

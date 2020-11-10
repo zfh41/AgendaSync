@@ -17,7 +17,7 @@ export default function GoogleButton(params) {
     else
     {
       const { email } = response.profileObj;
-      Socket.emit('login with profile',
+      Socket.emit('login with email',
       {
         "email":email
       });//after login; every page refresh rerturns profile instead

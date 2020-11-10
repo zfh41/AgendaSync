@@ -86,12 +86,25 @@ def login(data):
     print(cred.refresh_token)
 
 
+@socketio.on("login with email")
+def loginWithEmail(data):
+    email = data['email']
+    print(email)
+    
 @socketio.on("sendCalendar")
 def sendCalendar(data): #when calendar api code is finished it will have to send this in the data sent back to client
         loginUser="https://calendar.google.com/calendar/embed?src={}&ctz=America%2FNew_York".format(data['email'])
         socketio.emit('googleCalendar', {
             'url':loginUser
             })
+
+@socketio.on("addCalendarEvent")
+def addCalendarEvent(data):
+    print(data)
+    
+@socketio.on("addToDoList")
+def addToDoList(data):
+    print(data)
 
 if __name__ == '__main__':
     #init_db(app)

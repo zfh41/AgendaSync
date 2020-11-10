@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Socket from './Socket';
 import LoginPage from './LoginPage';
-// import Placeholder from './Placeholder';
 import MainPage from './MainPage';
 export function Content() {
 
