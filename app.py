@@ -62,6 +62,18 @@ def bot():
     return str(resp)
 
 
+
+@socketio.on("login")
+def login(data):
+    print(data)
+
+@socketio.on("sendCalendar")
+def sendCalendar(data): #when calendar api code is finished it will have to send this in the data sent back to client
+        loginUser="https://calendar.google.com/calendar/embed?src={}&ctz=America%2FNew_York".format(data['email'])
+        socketio.emit('googleCalendar', {
+            'url':loginUser
+            })
+
 if __name__ == '__main__':
     #init_db(app)
     socketio.run(

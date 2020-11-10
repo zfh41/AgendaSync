@@ -1,0 +1,23 @@
+body{
+    font-family:Helvetica;
+    color:#333e48;
+}
+
+.loginBox{
+    width:40%;
+    margin-left:30%;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 2px 2px 0px, rgba(0, 0, 0, 0.24) 0px 0px 1px 0px;
+    text-align:center;
+    padding:1vw;
+}
+
+.logo{
+    width:50%;
+}
+
+.googleLoginButton{
+    margin-top:1vw;
+    margin-bottom:1vw;
+    width:50%;
+}
+
