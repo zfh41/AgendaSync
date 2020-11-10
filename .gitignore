@@ -2,3 +2,4 @@ node_modules/
 package-lock.json
 sql.env
 twilio.env
+react.env
