@@ -30,7 +30,7 @@ def hello():
     return flask.render_template('index.html')
 
 
-@socketio.on("login")
+@socketio.on("login with code")
 def login(data):
     auth_code = data['code']
     print(auth_code)
