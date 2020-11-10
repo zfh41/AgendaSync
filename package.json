@@ -35,6 +35,7 @@
     "dotenv": "^8.2.0",
     "react-datepicker": "^3.3.0",
     "react-google-login": "^5.1.22",
+    "ngrok": "^3.3.0",
     "reactjs-popup": "^2.0.4",
     "socket.io-client": "^2.3.1"
   }
