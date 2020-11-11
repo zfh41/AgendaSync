@@ -1,5 +1,6 @@
 import os
 from os.path import join, dirname
+from dateutil import parser
 from twilio.rest import Client
 import flask
 from flask import request
@@ -120,7 +121,14 @@ def addCalendarEvent(data):
 @socketio.on("addToDoList")
 def addToDoList(data):
     print(data)
-
+    startToDo = data["startDate"] #currently both times are in UTC
+    endToDo = data["endDate"]
+    desc = data["description"]
+    startToDo = parser.isoparse(startToDo)
+    endToDo = parser.isoparse(endToDo)
+    print(startToDo)
+    print(endToDo)
+    #add_new_todo_to_db(desc,startToDo,endToDo)
 if __name__ == '__main__':
     init_db(app)
     socketio.run(
