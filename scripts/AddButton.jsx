@@ -1,6 +1,5 @@
 import * as React from 'react';
 import AddForm from './AddForm';
-import 'reactjs-popup/dist/index.css';
 
 export default function AddButton(params)
 {
@@ -8,7 +7,6 @@ export default function AddButton(params)
     function addForm(e)
     {
         e.preventDefault();
-        console.log('hi');
         setSelected(
             React.createElement(AddForm,{}));
     }

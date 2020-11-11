@@ -114,7 +114,8 @@ def login(data):
     result = service.events().list(calendarId=calendar_id).execute()
     
     #print(result['items'])
-    
+    add_new_person_to_db(email)
+
     socketio.emit('connected', {
         'calendarUpdate': result['items']
     })
@@ -123,6 +124,10 @@ def login(data):
 def loginWithEmail(data):
     email = data['email']
     print(email)
+    loginUser="https://calendar.google.com/calendar/embed?src={}&ctz=America%2FNew_York".format(email)
+    socketio.emit('googleCalendar', {
+        'url':loginUser
+        })
     #add_new_person_to_db(email)
     #TODO: use email to retreive user info and tokens from database 
     # send stuff to frontend
