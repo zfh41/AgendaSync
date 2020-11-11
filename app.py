@@ -90,7 +90,7 @@ def login(data):
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/calendar.events',
         'https://www.googleapis.com/auth/calendar'],
-        redirect_uri = "https://66b3860890e243e18ab6f0967df663ca.vfs.cloud9.us-east-1.amazonaws.com/"
+        redirect_uri = "https://66b3860890e243e18ab6f0967df663ca.vfs.cloud9.us-east-1.amazonaws.com"
         )
 
     flow.fetch_token(code=auth_code)
@@ -98,16 +98,26 @@ def login(data):
     
     service = build("calendar", "v3", credentials=cred)
     result = service.calendarList().list().execute()
-    
+    profileurl = "https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token={}".format(cred.token)
+    profile = requests.get(profileurl)
+    profile = profile.json()
+    email = profile["email"]
+    profile_id = profile["id"]
+    print(email)
+    print(profile_id)
+    print(profileurl)
+    loginUser="https://calendar.google.com/calendar/embed?src={}&ctz=America%2FNew_York".format(email)
+    socketio.emit('googleCalendar', {
+        'url':loginUser
+        })
     calendar_id = result['items'][0]['id']
     result = service.events().list(calendarId=calendar_id).execute()
     
-    print(result['items'])
+    #print(result['items'])
     
     socketio.emit('connected', {
         'calendarUpdate': result['items']
     })
-
 
 @socketio.on("login with email")
 def loginWithEmail(data):
@@ -118,14 +128,6 @@ def loginWithEmail(data):
     # send stuff to frontend
     # do google calendar stuff
     
-    
-
-@socketio.on("sendCalendar")
-def sendCalendar(data): #when calendar api code is finished it will have to send this in the data sent back to client
-        loginUser="https://calendar.google.com/calendar/embed?src={}&ctz=America%2FNew_York".format(data['email'])
-        socketio.emit('googleCalendar', {
-            'url':loginUser
-            })
 
 @socketio.on("addCalendarEvent")
 def addCalendarEvent(data):

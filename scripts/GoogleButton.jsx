@@ -8,7 +8,6 @@ export default function GoogleButton(params) {
   console.log(clientId);
   function success(response) {
     const { code } = response;
-
     if(code != undefined)
     {
       Socket.emit('login with code', {
@@ -23,9 +22,6 @@ export default function GoogleButton(params) {
         "email":email
       });//after login; every page refresh rerturns profile instead
     }
-    Socket.emit('sendCalendar',{ 
-      "email":"jme5@njit.edu"  //hardcoded value; email address cannot be retrieved on client side when auth
-    });                         //code is retreived on client side.  
     params.setAuthenticated(true);
     params.setCode(code);
   }
