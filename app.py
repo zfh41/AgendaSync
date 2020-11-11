@@ -8,6 +8,8 @@ import flask_socketio
 import flask_sqlalchemy
 from dotenv import load_dotenv
 from twilio.twiml.messaging_response import MessagingResponse
+import google.oauth2.credentials
+import google_auth_oauthlib.flow
 
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
@@ -27,9 +29,11 @@ def init_db(app):
 import bot as Bot
 import models
 
+
 @app.route('/', methods=['GET', 'POST'])
 def hello():
     return flask.render_template('index.html')
+
 #twilio
 
 ADD_TODO = "add todo"
@@ -60,12 +64,33 @@ def bot():
     if not responded:
         msg.body('I only know about famous quotes and cats, sorry!')
     return str(resp)
+    
 
 
 
-@socketio.on("login")
+@socketio.on("login with code")
 def login(data):
-    print(data)
+    auth_code = data['code']
+    print(auth_code)
+    flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
+        'client_secret.json',
+        scopes=['openid', 'https://www.googleapis.com/auth/userinfo.email',
+        'https://www.googleapis.com/auth/userinfo.profile',
+        'https://www.googleapis.com/auth/calendar.events',
+        'https://www.googleapis.com/auth/calendar'],
+        redirect_uri = "https://a1cbac3aed844b74bb46bf3b83eaaca8.vfs.cloud9.us-east-1.amazonaws.com"
+        )
+
+    flow.fetch_token(code=auth_code)
+    cred = flow.credentials
+    print(cred.token)
+    print(cred.refresh_token)
+
+
+@socketio.on("login with email")
+def loginWithEmail(data):
+    email = data['email']
+    print(email)
 
 @socketio.on("sendCalendar")
 def sendCalendar(data): #when calendar api code is finished it will have to send this in the data sent back to client
@@ -75,7 +100,7 @@ def sendCalendar(data): #when calendar api code is finished it will have to send
             })
 
 if __name__ == '__main__':
-    #init_db(app)
+    init_db(app)
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),

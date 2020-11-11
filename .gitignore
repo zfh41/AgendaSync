@@ -3,6 +3,7 @@ package-lock.json
 sql.env
 twilio.env
 react.env
+client_secret.json
 __pycache__/
 credentials.json
 token.pkl
