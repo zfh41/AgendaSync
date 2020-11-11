@@ -11,6 +11,9 @@ from twilio.twiml.messaging_response import MessagingResponse
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
 
+from apiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+
 app = flask.Flask(__name__)
 socketio = flask_socketio.SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
@@ -73,7 +76,7 @@ def login(data):
     auth_code = data['code']
     print(auth_code)
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
-        'client_secret.json',
+        'credentials.json',
         scopes=['openid', 'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/calendar.events',
@@ -83,8 +86,18 @@ def login(data):
 
     flow.fetch_token(code=auth_code)
     cred = flow.credentials
-    print(cred.token)
-    print(cred.refresh_token)
+    
+    service = build("calendar", "v3", credentials=cred)
+    result = service.calendarList().list().execute()
+    
+    calendar_id = result['items'][0]['id']
+    result = service.events().list(calendarId=calendar_id).execute()
+    
+    print(result['items'])
+    
+    socketio.emit('connected', {
+        'calendarUpdate': result['items']
+    })
 
 
 @socketio.on("login with email")
