@@ -15,10 +15,15 @@ from apiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 app = flask.Flask(__name__)
+
 socketio = flask_socketio.SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
 dotenv_path = join(dirname(__file__), 'sql.env')
 load_dotenv(dotenv_path)
+
+twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
+twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
+
 database_uri = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 
