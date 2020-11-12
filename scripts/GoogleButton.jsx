@@ -7,16 +7,23 @@ export default function GoogleButton(params) {
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
   console.log(clientId);
   function success(response) {
-    const { name } = "n";//response.profileObj;
-    const { email } = "e";//response.profileObj;
-    const { accessToken } = "a";//response;
     const { code } = response;
     let profilePic;
    
-
-    Socket.emit('login', {
+    if(code != undefined)
+    {
+      Socket.emit('login with code', {
       "code":code
-    });
+      });
+    }
+    else
+    {
+      const { email } = response.profileObj;
+      Socket.emit('login with email', {
+      "email":email
+      });
+    }
+    
     Socket.emit('sendCalendar',{ 
       "email":"sb989@njit.edu"  //hardcoded value; email address cannot be retrieved on client side when auth
     });                         //code is retreived on client side.  
@@ -59,7 +66,7 @@ export default function GoogleButton(params) {
        responseType="code"
       accessType="offline"
       prompt="consent"
-      scope={"https://www.googleapis.com/auth/calendar.events"}
+      scope={"https://www.googleapis.com/auth/calendar"}
       
     />
     );
