@@ -17,10 +17,15 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 USERS_UPDATED_CHANNEL = 'users updated'
 
 app = flask.Flask(__name__)
+
 socketio = flask_socketio.SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
 dotenv_path = join(dirname(__file__), 'sql.env')
 load_dotenv(dotenv_path)
+
+twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
+twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
+
 database_uri = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 
@@ -34,6 +39,14 @@ def init_db(app):
 import bot as Bot
 import models
 
+def message_emit(channel):
+    
+    #Pull database updated with new todo list for user
+    
+    #socketio.emit(channel, {
+    #    'updateTodoList': fromDatabase['todoList for user']
+    #})
+    print("message emitted")
 
 @app.route('/', methods=['GET', 'POST'])
 def hello():
@@ -41,33 +54,116 @@ def hello():
 
 #twilio
 
-ADD_TODO = "add todo"
-LIST_TODO = "list todo"
-START_TODO = "start date"
-DUE_DATE = "due date"
-
 @app.route('/bot', methods=['POST'])
 def bot():
     incoming_msg = request.values.get('Body', '').lower()
     resp = MessagingResponse()
     msg = resp.message()
     responded = False
-    if 'quote' in incoming_msg:
-        # return a quote
-        r = requests.get('https://api.quotable.io/random')
-        if r.status_code == 200:
-            data = r.json()
-            quote = f'{data["content"]} ({data["author"]})'
-        else:
-            quote = 'I could not retrieve a quote at this time, sorry.'
-        msg.body(quote)
+    if 'help me' in incoming_msg:
+        msg.body("Hello! I'm the agendasync textbot! My know commands are: 'add todo', 'delete todo, 'list todo', 'start date', and 'due date'")
         responded = True
-    if 'cat' in incoming_msg:
-        # return a cat pic
-        msg.media('https://cataas.com/cat')
-        responded = True
+    if 'add todo' in incoming_msg:
+        try:
+            if incoming_msg[8] == ' ' and incoming_msg[9] != ' ':
+                message_body = incoming_msg[9:]
+                
+                #Database Insertion Code/Method goes here
+                
+                message_emit("todolist update")
+                
+                msg.body("Inserted: '" +  message_body + "' into your todolist!")
+                responded = True
+            else:
+                msg.body("The proper add command is: add todo 'insert event here'")
+                responded = True
+        except:
+            msg.body("The proper add command is: add todo 'insert event here'")
+            responded = True
+            
+    if 'delete todo' in incoming_msg:
+        try:
+            if incoming_msg[11] == ' ' and incoming_msg[12] != ' ':
+                message_body = incoming_msg[12:]
+                
+                #query for message_body in todolist table
+                #if message_body not in table:
+                    #msg.body("The event '" + message_body "' cannot be found in your todo list!")
+                    #responded = True
+                #else:
+                    #delete item from db todolist
+                
+                message_emit("todolist update")
+                
+                msg.body("Deleted: '" +  message_body + "' from your todolist!")
+                responded = True
+            else:
+                print("dumb")
+                msg.body("The proper delete command is: delete todo 'insert event here'")
+                responded = True
+        except:
+            msg.body("The proper delete command is: delete todo 'insert event here'")
+            responded = True
+            
+    if 'list todo' in incoming_msg:
+        try:
+            msg.body("Your todolsit contents are as follows:")
+            todoListString = ""
+            
+            #query database tables for todolist
+            #for item in database:
+            #    todoListString += (" * " + db.item + "\n")
+            
+            msg.body(todoListString)
+            responded = True
+            
+        except:
+            msg.body("The proper list command is: list todo")
+            responded = True
+            
+    if 'start date' in incoming_msg:
+        try:
+            if incoming_msg[10] == ' ' and incoming_msg[11] != ' ':
+                message_body = incoming_msg[11:]
+                
+                # query for message_body in todolist table
+                #if message_body not in table:
+                    #msg.body("The event '" + message_body "' cannot be found in your todo list!")
+                    #responded = True
+                
+                #dbQuery = db.query
+                
+                msg.body("The start date of the event '" + message_body + "' is: ") # database query would go here
+                responded = True
+            else:
+                msg.body("The proper start date command is: start date 'insert event here'")
+                responded = True
+        except:
+            msg.body("The proper start date command is: start date 'insert event here'")
+            responded = True
+    
+    if 'due date' in incoming_msg:
+        try:
+            if incoming_msg[8] == ' ' and incoming_msg[9] != ' ':
+                message_body = incoming_msg[9:]
+                
+                # query for message_body in todolist table
+                #if message_body not in table:
+                    #msg.body("The event '" + message_body "' cannot be found in your todo list!")
+                    #responded = True
+                
+                #dbQuery = db.query
+                
+                msg.body("The due date of the event '" + message_body + "' is ") # database query would go here
+                responded = True
+            else:
+                msg.body("The proper due date command is: due date 'insert event here'")
+                responded = True
+        except:
+            msg.body("The proper due date command is: due date 'insert event here'")
+            responded = True
     if not responded:
-        msg.body('I only know about famous quotes and cats, sorry!')
+        msg.body("I'm not sure I understand that, could you try again?")
     return str(resp)
     
 
