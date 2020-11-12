@@ -4,3 +4,5 @@ sql.env
 twilio.env
 react.env
 __pycache__/
+credentials.json
+token.pkl
