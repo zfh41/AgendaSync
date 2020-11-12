@@ -249,18 +249,15 @@ def update_tokens_in_db(email,cred):
     
 user_email = ""
 cred = ""
-def add_new_todo_to_db(todo,start,end):
+def add_new_todo_to_db(todo,start="",end=""):
     some_person = db.session.query(models.Person).filter_by(email=user_email).first()
-    t = models.Todo(todo=todo, person=some_person,start_todo = start, due_date = end)
+    if start == "" and end == "":
+        t = models.Todo(todo=todo, person=some_person)
+    else:
+        t = models.Todo(todo=todo, person=some_person,start_todo = start, due_date = end)
     db.session.add(t);
     db.session.commit();
 
-def add_new_todo_to_db_without_dates(todo):
-    some_person = db.session.query(models.Person).filter_by(email=user_email).first()
-    t = models.Todo(todo=todo, person=some_person)
-    db.session.add(t);
-    db.session.commit();
-    
 @socketio.on("login with code")
 def login(data):
     global cred
