@@ -255,7 +255,12 @@ def add_new_todo_to_db(todo,start,end):
     db.session.add(t);
     db.session.commit();
 
-
+def add_new_todo_to_db_without_dates(todo):
+    some_person = db.session.query(models.Person).filter_by(email=user_email).first()
+    t = models.Todo(todo=todo, person=some_person)
+    db.session.add(t);
+    db.session.commit();
+    
 @socketio.on("login with code")
 def login(data):
     global cred
