@@ -1,8 +1,7 @@
 import * as React from 'react';
 import Socket from './Socket';
 import LoginPage from './LoginPage';
-// import Placeholder from './Placeholder';
-import UserCalendar from './UserCalendar';
+import MainPage from './MainPage';
 export function Content() {
 
     const [authenticated,setAuthenticated] = React.useState(false);
@@ -29,7 +28,7 @@ export function Content() {
         if(authenticated)
         {
             page = React.createElement(
-                UserCalendar,
+                MainPage,
                 {
                     setAuthenticated,
                     setName,
