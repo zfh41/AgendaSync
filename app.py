@@ -24,6 +24,8 @@ load_dotenv(dotenv_path)
 twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
 twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
 
+google_uri = os.environ['GOOGLE_URI']
+
 database_uri = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
 
