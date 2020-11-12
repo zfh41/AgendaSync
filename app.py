@@ -22,9 +22,14 @@ socketio = flask_socketio.SocketIO(app)
 socketio.init_app(app, cors_allowed_origins="*")
 dotenv_path = join(dirname(__file__), 'sql.env')
 load_dotenv(dotenv_path)
-
+dotenv_path = join(dirname(__file__),'redirect.env')
+load_dotenv(dotenv_path)
+dotenv_path = join(dirname(__file__),'twilio.env')
+load_dotenv(dotenv_path)
 twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
 twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
+
+google_uri = os.environ['GOOGLE_URI']
 
 database_uri = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_DATABASE_URI'] = database_uri
@@ -186,7 +191,7 @@ def login(data):
         'https://www.googleapis.com/auth/userinfo.profile',
         'https://www.googleapis.com/auth/calendar.events',
         'https://www.googleapis.com/auth/calendar'],
-        redirect_uri = "https://66b3860890e243e18ab6f0967df663ca.vfs.cloud9.us-east-1.amazonaws.com"
+        redirect_uri = google_uri
         )
 
     flow.fetch_token(code=auth_code)
