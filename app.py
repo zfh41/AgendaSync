@@ -37,6 +37,14 @@ def init_db(app):
 import bot as Bot
 import models
 
+def message_emit(channel):
+    
+    #Pull database updated with new todo list for user
+    
+    #socketio.emit(channel, {
+    #    'updateTodoList': fromDatabase['todoList for user']
+    #})
+    print("message emitted")
 
 @app.route('/', methods=['GET', 'POST'])
 def hello():
@@ -55,6 +63,42 @@ def bot():
     resp = MessagingResponse()
     msg = resp.message()
     responded = False
+    if 'help me' in incoming_msg:
+        msg.body("Hello! I'm the agendasync textbot! My know commands are: 'quote' and 'cat'")
+        responded = True
+    if 'add todo' in incoming_msg:
+        try:
+            if incoming_msg[8] == ' ' and incoming_msg[9] != ' ':
+                message_body = incoming_msg[9:]
+                
+                # Database Insertion Code/Method goes here
+                
+                message_emit("todolist update")
+                
+                msg.body("Inserted: '" +  message_body + "' into your todolist!")
+                responded = True
+            else:
+                msg.body("The proper add command is: add todo 'insert event here'")
+                responded = True
+        except:
+            msg.body("The proper add command is: add todo 'insert event here'")
+            responded = True
+    if 'list todo' in incoming_msg:
+        try:
+            msg.body("Your todolsit contents are as follows:")
+            todoListString = ""
+            
+            # query database tables for todolist
+            #for item in database:
+            #    todoListString += (" * " + db.item + "\n")
+            
+            msg.body(todoListString)
+            responded = True
+            
+        except:
+            msg.body("The proper add command is: list todo")
+            responded = True     
+    '''
     if 'quote' in incoming_msg:
         # return a quote
         r = requests.get('https://api.quotable.io/random')
@@ -69,8 +113,9 @@ def bot():
         # return a cat pic
         msg.media('https://cataas.com/cat')
         responded = True
+    '''
     if not responded:
-        msg.body('I only know about famous quotes and cats, sorry!')
+        msg.body("I'm not sure I understand that, could you try again?")
     return str(resp)
     
 
