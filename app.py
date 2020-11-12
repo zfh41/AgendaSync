@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 from twilio.twiml.messaging_response import MessagingResponse
 import google.oauth2.credentials
 import google_auth_oauthlib.flow
+import datetime
 
 USERS_UPDATED_CHANNEL = 'users updated'
 
@@ -27,16 +28,17 @@ def init_db(app):
     db.app = app
     db.create_all()
     db.session.commit()
-    
-import bot as Bot
+
 import models
 
 @app.route('/', methods=['GET', 'POST'])
 def hello():
     return flask.render_template('index.html')
 #twilio
+#ngrok http 5000
 
 ADD_TODO = "add todo"
+DELETE_TODO = "delete todo"
 LIST_TODO = "list todo"
 START_TODO = "start date"
 DUE_DATE = "due date"
@@ -47,31 +49,80 @@ def bot():
     resp = MessagingResponse()
     msg = resp.message()
     responded = False
-    if 'quote' in incoming_msg:
-        # return a quote
-        r = requests.get('https://api.quotable.io/random')
-        if r.status_code == 200:
-            data = r.json()
-            quote = f'{data["content"]} ({data["author"]})'
-        else:
-            quote = 'I could not retrieve a quote at this time, sorry.'
-        msg.body(quote)
+    if 'help me' in incoming_msg:
+        msg.body("Hello! I'm the agendasync textbot! My know commands are: 'add todo', 'delete todo, 'list todo', 'start date', and 'due date'")
         responded = True
-    if 'cat' in incoming_msg:
-        # return a cat pic
-        msg.media('https://cataas.com/cat')
+    if ADD_TODO in incoming_msg:
+        message_body = incoming_msg[9:]
+        add_new_todo_to_db(message_body)
+        msg.body("Inserted: '" +  message_body + "' into your todolist!")
+        responded = True
+    if DELETE_TODO in incoming_msg:
+        message_body = incoming_msg[12:]
+        #TODO - delete 
+        msg.body("Deleted: '" +  message_body + "' from your todolist!")
+        responded = True
+        
+        #query for message_body in todolist table
+        #if message_body not in table:
+            #msg.body("The event '" + message_body "' cannot be found in your todo list!")
+            #responded = True
+        #else:
+            #delete item from db todolist
+        
+        #message_emit("todolist update")
+            
+    if LIST_TODO in incoming_msg:
+            msg.body("Your todolsit contents are as follows:")
+            todoListString = ""
+            #query database tables for todolist
+            #for item in database:
+            #    todoListString += (" * " + db.item + "\n")
+            msg.body(todoListString)
+            responded = True
+            
+    if START_TODO in incoming_msg:
+        message_body = incoming_msg[11:]
+        # query for message_body in todolist table
+        #if message_body not in table:
+            #msg.body("The event '" + message_body "' cannot be found in your todo list!")
+            #responded = True
+        #dbQuery = db.query
+        msg.body("The start date of the event '" + message_body + "' is: ") # database query would go here
+        responded = True
+    
+    if DUE_DATE in incoming_msg:
+        message_body = incoming_msg[9:]
+        # query for message_body in todolist table
+        #if message_body not in table:
+            #msg.body("The event '" + message_body "' cannot be found in your todo list!")
+            #responded = True
+        #dbQuery = db.query
+        msg.body("The due date of the event '" + message_body + "' is ") # database query would go here
         responded = True
     if not responded:
-        msg.body('I only know about famous quotes and cats, sorry!')
+        msg.body("I'm not sure I understand that, could you try again?")
     return str(resp)
+    
+def get_all_emails():
+    all_emails = [db_emails.email for db_emails in db.session.query(models.Person).all()]
+    return all_emails
+
+def get_person_object(email):
+    some_person = db.session.query(models.Person).filter_by(email=email).first()
+    return some_person
+
 
 def add_new_person_to_db(email):
-        db.session.add(models.Person(email));
-        db.session.commit();
+    p = models.Person(email=email)
+    db.session.add(p);
+    db.session.commit();
         
-def add_new_todo_to_db(todo, start_todo, due_date):
-        db.session.add(models.Todo(todo, start_todo, due_date));
-        db.session.commit();
+def add_new_todo_to_db(todo):
+    some_person = db.session.query(models.Person).filter_by(email=user_email).first()
+    t = models.Todo(todo=todo, person=some_person)
+    db.session.add(t);
+    db.session.commit();
 
 
 @socketio.on("login with code")
@@ -92,12 +143,22 @@ def login(data):
     print(cred.token)
     print(cred.refresh_token)
 
+user_email = ""
 
 @socketio.on("login with email")
 def loginWithEmail(data):
     email = data['email']
+    global user_email
+    user_email = email
     print(email)
-    add_new_person_to_db(email)
+    print(user_email)
+    if email not in get_all_emails():
+        add_new_person_to_db(email)
+    else:
+        print(f"user {email} exists")
+    
+    
+print("user email="+user_email)
 
 @socketio.on("sendCalendar")
 def sendCalendar(data): #when calendar api code is finished it will have to send this in the data sent back to client
