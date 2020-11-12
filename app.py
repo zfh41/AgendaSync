@@ -249,9 +249,9 @@ def update_tokens_in_db(email,cred):
     
 user_email = ""
 cred = ""
-def add_new_todo_to_db(todo):
+def add_new_todo_to_db(todo,start,end):
     some_person = db.session.query(models.Person).filter_by(email=user_email).first()
-    t = models.Todo(todo=todo, person=some_person)
+    t = models.Todo(todo=todo, person=some_person,start_todo = start, due_date = end)
     db.session.add(t);
     db.session.commit();
 
@@ -346,9 +346,6 @@ def addCalendarEvent(data):
         'dateTime': date,
         'timeZone': 'America/New_York',
       },
-      'recurrence': [
-        'RRULE:FREQ=DAILY;COUNT=2'
-      ],
       'attendees': [],
       'reminders': {
         'useDefault': True
@@ -369,7 +366,7 @@ def addToDoList(data):
     endToDo = parser.isoparse(endToDo)
     print(startToDo)
     print(endToDo)
-    add_new_todo_to_db(desc)
+    add_new_todo_to_db(desc,startToDo,endToDo)
     
 if __name__ == '__main__':
     init_db(app)
