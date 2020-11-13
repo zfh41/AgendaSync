@@ -125,105 +125,6 @@ def bot():
         #dbQuery = db.query
         msg.body("The due date of the event '" + message_body + "' is ") # database query would go here
         responded = True
-    if 'add todo' in incoming_msg:
-        try:
-            if incoming_msg[8] == ' ' and incoming_msg[9] != ' ':
-                message_body = incoming_msg[9:]
-                
-                #Database Insertion Code/Method goes here
-                
-                message_emit("todolist update")
-                
-                msg.body("Inserted: '" +  message_body + "' into your todolist!")
-                responded = True
-            else:
-                msg.body("The proper add command is: add todo 'insert event here'")
-                responded = True
-        except:
-            msg.body("The proper add command is: add todo 'insert event here'")
-            responded = True
-            
-    if 'delete todo' in incoming_msg:
-        try:
-            if incoming_msg[11] == ' ' and incoming_msg[12] != ' ':
-                message_body = incoming_msg[12:]
-                
-                #query for message_body in todolist table
-                #if message_body not in table:
-                    #msg.body("The event '" + message_body "' cannot be found in your todo list!")
-                    #responded = True
-                #else:
-                    #delete item from db todolist
-                
-                message_emit("todolist update")
-                
-                msg.body("Deleted: '" +  message_body + "' from your todolist!")
-                responded = True
-            else:
-                print("dumb")
-                msg.body("The proper delete command is: delete todo 'insert event here'")
-                responded = True
-        except:
-            msg.body("The proper delete command is: delete todo 'insert event here'")
-            responded = True
-            
-    if 'list todo' in incoming_msg:
-        try:
-            msg.body("Your todolsit contents are as follows:")
-            todoListString = ""
-            
-            #query database tables for todolist
-            #for item in database:
-            #    todoListString += (" * " + db.item + "\n")
-            
-            msg.body(todoListString)
-            responded = True
-            
-        except:
-            msg.body("The proper list command is: list todo")
-            responded = True
-            
-    if 'start date' in incoming_msg:
-        try:
-            if incoming_msg[10] == ' ' and incoming_msg[11] != ' ':
-                message_body = incoming_msg[11:]
-                
-                # query for message_body in todolist table
-                #if message_body not in table:
-                    #msg.body("The event '" + message_body "' cannot be found in your todo list!")
-                    #responded = True
-                
-                #dbQuery = db.query
-                
-                msg.body("The start date of the event '" + message_body + "' is: ") # database query would go here
-                responded = True
-            else:
-                msg.body("The proper start date command is: start date 'insert event here'")
-                responded = True
-        except:
-            msg.body("The proper start date command is: start date 'insert event here'")
-            responded = True
-    
-    if 'due date' in incoming_msg:
-        try:
-            if incoming_msg[8] == ' ' and incoming_msg[9] != ' ':
-                message_body = incoming_msg[9:]
-                
-                # query for message_body in todolist table
-                #if message_body not in table:
-                    #msg.body("The event '" + message_body "' cannot be found in your todo list!")
-                    #responded = True
-                
-                #dbQuery = db.query
-                
-                msg.body("The due date of the event '" + message_body + "' is ") # database query would go here
-                responded = True
-            else:
-                msg.body("The proper due date command is: due date 'insert event here'")
-                responded = True
-        except:
-            msg.body("The proper due date command is: due date 'insert event here'")
-            responded = True
     if not responded:
         msg.body("I'm not sure I understand that, could you try again?")
     return str(resp)
@@ -268,7 +169,6 @@ def login(data):
         'client_secret.json',
         scopes=['openid', 'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/calendar.events',
         'https://www.googleapis.com/auth/calendar'],
         redirect_uri = google_uri
         )
