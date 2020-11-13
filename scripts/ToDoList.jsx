@@ -28,7 +28,6 @@ export default function ToDoList() {
   }
   
   function PutMessage(props) {
-    index+=1
     return (
       <div>
       {props.address} startTime:{startDates[index]} endTime:{endDates[index]}
