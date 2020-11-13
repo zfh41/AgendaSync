@@ -89,8 +89,8 @@ def bot():
         msg.body("Please select a todo to delete")
         msg.body(get_all_todos_values())
         # message_body = incoming_msg[12:]
-        msg.body("Deleted: '" +  message_body + "' from your todolist!")
-        delete_todo(message_body)
+        # msg.body("Deleted: '" +  message_body + "' from your todolist!")
+        # delete_todo(message_body)
         responded = True
         
         #query for message_body in todolist table
@@ -153,7 +153,7 @@ def get_all_todos_values():
     all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
     todo_list = []
     for todo in all_todos:
-        todo_list.append('Todo: ' + todo.todo + '\nstart date:' +str(todo.start_todo) + '\ndue date: ' +str(todo.start_todo))
+        todo_list.append('Id: ' +str(todo.id) +'\nTodo: ' + todo.todo + '\nstart date: ' +str(todo.start_todo) + '\ndue date: ' +str(todo.due_date) + '\n')
     return ' '.join(map(str, todo_list))
         
 
