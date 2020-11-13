@@ -29,11 +29,12 @@ export default function MainPage(params)
                 setSelected(React.createElement(PhoneNumberForm,{
                     "setSelected":setSelected,
                     "userURL":userURL,
-                    
+                    "setUpDefaultLook":setUpDefaultLook,
+                    "email":email
                 }));
             });
             
-        });
+        },[]);
     }
     
     function setUpDefaultLook()
@@ -46,8 +47,20 @@ export default function MainPage(params)
         },[userURL]);
     }
     
+    function removePhoneForm()
+    {
+        React.useEffect(()=>{
+            Socket.on("Server has phone number",()=>{
+                setSelected(React.createElement(UserCalendar,{"userURL":userURL}));
+            })
+           
+
+        },[userURL]);
+    }
+    
     setUpDefaultLook();
     getPhoneNumber(); 
+    removePhoneForm();
     return (
         <div>
             <GoogleButton
@@ -69,10 +82,12 @@ export default function MainPage(params)
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <AddButton
                 setSelected={setSelected}
+                email={email}
             />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <AgendaButton
                 setSelected={setSelected}
+                email={email}
             />
         </div>
         

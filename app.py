@@ -73,6 +73,9 @@ HELP_ME = 'help me'
 @app.route('/bot', methods=['POST'])
 def bot():
     incoming_msg = request.values.get('Body', '').lower()
+    phone = request.form['From']
+    person = get_person_object_phone_number(phone)
+    user_email = person.email
     resp = MessagingResponse()
     msg = resp.message()
     responded = False
@@ -82,7 +85,7 @@ def bot():
         
     if ADD_TODO in incoming_msg:
         message_body = incoming_msg[9:]
-        add_new_todo_to_db(message_body)
+        add_new_todo_to_db(message_body,user_email)
         msg.body("Inserted: '" +  message_body + "' into your todolist!")
         responded = True
     # if DELETE_TODO in incoming_msg and incoming_msg[12:].isnumeric():
@@ -95,7 +98,7 @@ def bot():
     #     responded = True
             
     if LIST_TODO in incoming_msg:
-            msg.body("Your todo listt contents are as follows: " + get_all_todos_values())
+            msg.body("Your todo listt contents are as follows: " + get_all_todos_values(user_email))
             responded = True
             
     if START_TODO in incoming_msg:
@@ -139,8 +142,7 @@ def get_all_emails():
 #         socketio.emit('start date', str(todo.start_todo))
 #         socketio.emit('due date', str(todo.due_date))
         
-def get_all_todos_values():
-    global user_email
+def get_all_todos_values(user_email):
     p = get_person_object(user_email)
     all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
     todo_list = []
@@ -148,8 +150,7 @@ def get_all_todos_values():
         todo_list.append('Id: ' +str(todo.id) +'\nTodo: ' + todo.todo + '\nstart date: ' +str(todo.start_todo) + '\ndue date: ' +str(todo.due_date) + '\n')
     return ' '.join(map(str, todo_list))
     
-def get_all_todos_ids():
-    global user_email
+def get_all_todos_ids(user_email):
     p = get_person_object(user_email)
     all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
     todo_list_ids = []
@@ -157,14 +158,17 @@ def get_all_todos_ids():
         todo_list_ids.append(str(todo.id))
     return todo_list_ids
         
-
+def get_person_object_phone_number(phone_number):
+    some_person = db.session.query(models.Person).filter_by(phone_number=phone_number).first()
+    return some_person
+    
 def get_person_object(email):
     some_person = db.session.query(models.Person).filter_by(email=email).first()
     return some_person
 
 
-def add_new_person_to_db(email,cred):
-    p = models.Person(email=email,cred=cred)
+def add_new_person_to_db(email,cred,phone=""):
+    p = models.Person(email=email,cred=cred,phone=phone)
     db.session.add(p);
     db.session.commit();
 
@@ -172,13 +176,14 @@ def update_tokens_in_db(email,cred):
     p = get_person_object(email)
     p.cred = cred
     db.session.commit();
+    
 @socketio.on("send todo")
-def get_all_todos():
+def get_all_todos(data):
     # p = get_person_object(user_email)
     # all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
     # # all_todos = [db_todos.todo for db_todos in db.session.query(models.Person).all()]
     # return p.todos
-    global user_email
+    user_email = data["email"]
     p = get_person_object(user_email)
     todos = []
     start_todos=[]
@@ -200,10 +205,9 @@ def get_all_todos():
         message
     )
     print(message)
-user_email = ""
-cred = ""
 
-def add_new_todo_to_db(todo,start="",end=""):
+
+def add_new_todo_to_db(todo,user_email,start="",end=""):
     some_person = db.session.query(models.Person).filter_by(email=user_email).first()
     if start == "" and end == "":
         t = models.Todo(todo=todo, person=some_person)
@@ -221,8 +225,6 @@ def add_new_todo_to_db(todo,start="",end=""):
 
 @socketio.on("login with code")
 def login(data):
-    global cred
-    global user_email
     auth_code = data['code']
     print(auth_code)
     flow = google_auth_oauthlib.flow.Flow.from_client_secrets_file(
@@ -248,7 +250,8 @@ def login(data):
 
     loginUser="https://calendar.google.com/calendar/embed?src={}&ctz=America%2FNew_York".format(user_email)
     socketio.emit('googleCalendar', {
-        'url':loginUser
+        'url':loginUser,
+        "email":user_email
         })
     calendar_id = result['items'][0]['id']
     
@@ -257,6 +260,7 @@ def login(data):
     #print(result['items'])
     
     if user_email not in get_all_emails():
+        add_new_person_to_db(user_email,cred)
         socketio.emit("getPhoneNumber")
     else:
         print(f"user {user_email} exists")
@@ -268,24 +272,27 @@ def login(data):
 
 @socketio.on("receivePhoneNumber")
 def receivePhoneNumber(data):
-    add_new_person_to_db(user_email,cred)
+    print(data)
+    email = data["email"]
+    print(email)
+    person = get_person_object(data["email"])
     phone = "+"
     phone+= data["phone"]
     print(phone)
-print("user email="+user_email)
-
+    person.phone = phone
+    db.session.commit()
+    socketio.emit('Server has phone number')
 @socketio.on("login with email")
 def loginWithEmail(data):
     email = data['email']
-    global user_email
     user_email = email
     print(email)
     loginUser="https://calendar.google.com/calendar/embed?src={}&ctz=America%2FNew_York".format(email)
     socketio.emit('googleCalendar', {
-        'url':loginUser
+        'url':loginUser,
+        "email":user_email
         })
     person = get_person_object(user_email)
-    global cred
     cred = person.cred
     print(cred)
     print(cred.token)
@@ -296,7 +303,9 @@ def loginWithEmail(data):
     
 @socketio.on("addCalendarEvent")
 def addCalendarEvent(data):
-    global cred
+    user_email = data["email"]
+    person = get_person_object(user_email)
+    cred = person.cred
     if not cred or not cred.valid:
         if cred and cred.expired and cred.refresh_token:
             cred.refresh(Request())
@@ -329,6 +338,7 @@ def addCalendarEvent(data):
 @socketio.on("addToDoList")
 def addToDoList(data):
     print(data)
+    user_email = data["email"]
     startToDo = data["startDate"] #currently both times are in UTC
     endToDo = data["endDate"]
     desc = data["description"]
@@ -336,7 +346,7 @@ def addToDoList(data):
     endToDo = parser.isoparse(endToDo)
     print(startToDo)
     print(endToDo)
-    add_new_todo_to_db(desc,startToDo,endToDo)
+    add_new_todo_to_db(desc,user_email,startToDo,endToDo)
     # get_all_todos()
 if __name__ == '__main__':
     # init_db(app)

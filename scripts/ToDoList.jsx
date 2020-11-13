@@ -2,16 +2,18 @@ import * as React from 'react';
 
 import Socket from './Socket';
 
-export default function ToDoList() {
+export default function ToDoList(params) {
     const [todos, setTodos] = React.useState([]);
     const[startDates, setstartDates] = React.useState([]);
     const[endDates, setEndDates] = React.useState([]);
     let index = 0;
-    
+    var email = params.email;
   function sendMessage()
   {
     React.useEffect(() => {
-        Socket.emit("send todo");
+        Socket.emit("send todo",{
+          "email":email
+        });
     },[]);
   }
   

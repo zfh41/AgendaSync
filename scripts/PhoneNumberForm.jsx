@@ -1,11 +1,14 @@
 import * as React from 'react';
 import Socket from './Socket';
-
+import UserCalendar from './UserCalendar';
 export default function PhoneNumberForm(params)
 {
-    const [phone,setPhone] = React.useEffect("");
+    const [phone,setPhone] = React.useState("");
     const [input,setInput] = React.useState("");
-    var { setUpDefaultLook } = params;
+    var  setSelected = params.setSelected;
+    var userURL = params.userURL;
+    var email = params.email;
+    var setUpDefaultLook = params.setUpDefaultLook;
     function newInp(curr) 
     {
         setInput(curr.target.value);
@@ -15,11 +18,14 @@ export default function PhoneNumberForm(params)
     {
         e.preventDefault();
         console.log(input);
+        console.log(email);
         Socket.emit("receivePhoneNumber",{
-            "phone":input
+            "phone":input,
+            "email":email
         });
-        setUpDefaultLook();
     } 
+    
+     
     
     return(
         <form>

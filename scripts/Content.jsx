@@ -18,6 +18,7 @@ export function Content() {
         {
             Socket.on('googleCalendar', (data) => {
                 setUserURL(data['url']);
+                setEmail(data['email']);
             });
             
         });
@@ -25,7 +26,7 @@ export function Content() {
     
     function selectPage()
     {
-        if(authenticated)
+        if(authenticated && email != "")
         {
             page = React.createElement(
                 MainPage,

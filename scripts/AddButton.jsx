@@ -4,11 +4,12 @@ import AddForm from './AddForm';
 export default function AddButton(params)
 {
     var { setSelected } = params;
+    var email = params.email;
     function addForm(e)
     {
         e.preventDefault();
         setSelected(
-            React.createElement(AddForm,{}));
+            React.createElement(AddForm,{"email":email}));
     }
     const Button = 5;
     return(
