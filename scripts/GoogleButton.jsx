@@ -2,6 +2,7 @@ import * as React from 'react';
 import GoogleLogin from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
 import Socket from './Socket';
+import ReactDOM from 'react-dom';
 
 export default function GoogleButton(params) {
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;

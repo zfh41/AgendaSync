@@ -6,6 +6,8 @@
   c) `pip install eventlet`    
   d) `pip install twilio`    
   e) `pip install google_auth_oauthlib`    
+  f) `pip install python-dotenv`
+  g)  `pip install --upgrade google-api-python-client`
 :warning: :warning: :warning: If you see any error messages, make sure you use `sudo pip` or `sudo npm`. If it says "pip cannot be found", run `which pip` and use `sudo [path to pip from which pip] install`  :warning: :warning: :warning:  
 </div>
   

@@ -67,6 +67,7 @@ DELETE_TODO = "delete todo"
 LIST_TODO = "list todo"
 START_TODO = "start date"
 DUE_DATE = "due date"
+HELP_ME = 'help me'
 
 @app.route('/bot', methods=['POST'])
 def bot():
@@ -74,36 +75,26 @@ def bot():
     resp = MessagingResponse()
     msg = resp.message()
     responded = False
-    if 'help me' in incoming_msg:
+    if HELP_ME in incoming_msg:
         msg.body("Hello! I'm the agendasync textbot! My know commands are: 'add todo', 'delete todo, 'list todo', 'start date', and 'due date'")
         responded = True
+        
     if ADD_TODO in incoming_msg:
         message_body = incoming_msg[9:]
         add_new_todo_to_db(message_body)
         msg.body("Inserted: '" +  message_body + "' into your todolist!")
         responded = True
-    if DELETE_TODO in incoming_msg:
-        message_body = incoming_msg[12:]
-        #TODO - delete 
-        msg.body("Deleted: '" +  message_body + "' from your todolist!")
-        responded = True
-        
-        #query for message_body in todolist table
-        #if message_body not in table:
-            #msg.body("The event '" + message_body "' cannot be found in your todo list!")
-            #responded = True
-        #else:
-            #delete item from db todolist
-        
-        #message_emit("todolist update")
+    # if DELETE_TODO in incoming_msg and incoming_msg[12:].isnumeric():
+    #     delete_todo(int(incoming_msg[12:]))
+    #     msg.body("Deleting from your todolist!")
+    #     responded = True    
+    # elif DELETE_TODO in incoming_msg:
+    #     msg.body("Please reply with a todo id to delete: 'delete todo id'\n")
+    #     msg.body(get_all_todos_values())
+    #     responded = True
             
     if LIST_TODO in incoming_msg:
-            msg.body("Your todolsit contents are as follows:")
-            todoListString = ""
-            #query database tables for todolist
-            #for item in database:
-            #    todoListString += (" * " + db.item + "\n")
-            msg.body(todoListString)
+            msg.body("Your todo listt contents are as follows: " + get_all_todos_values())
             responded = True
             
     if START_TODO in incoming_msg:
@@ -132,6 +123,39 @@ def bot():
 def get_all_emails():
     all_emails = [db_emails.email for db_emails in db.session.query(models.Person).all()]
     return all_emails
+    
+# def get_all_todos():
+#     # p = get_person_object(user_email)
+#     # all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+#     # # all_todos = [db_todos.todo for db_todos in db.session.query(models.Person).all()]
+#     # return p.todos
+#     global user_email
+#     p = get_person_object(user_email)
+#     all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+#     for todo in all_todos:
+#         print(todo.todo, todo.start_todo, todo.due_date)
+#         socketio.emit('all todos', todo.todo)
+#         socketio.emit('start date', str(todo.start_todo))
+#         socketio.emit('due date', str(todo.due_date))
+        
+def get_all_todos_values():
+    global user_email
+    p = get_person_object(user_email)
+    all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+    todo_list = []
+    for todo in all_todos:
+        todo_list.append('Id: ' +str(todo.id) +'\nTodo: ' + todo.todo + '\nstart date: ' +str(todo.start_todo) + '\ndue date: ' +str(todo.due_date) + '\n')
+    return ' '.join(map(str, todo_list))
+    
+def get_all_todos_ids():
+    global user_email
+    p = get_person_object(user_email)
+    all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+    todo_list_ids = []
+    for todo in all_todos:
+        todo_list_ids.append(str(todo.id))
+    return todo_list_ids
+        
 
 def get_person_object(email):
     some_person = db.session.query(models.Person).filter_by(email=email).first()
@@ -147,9 +171,37 @@ def update_tokens_in_db(email,cred):
     p = get_person_object(email)
     p.cred = cred
     db.session.commit();
+@socketio.on("send todo")
+def get_all_todos():
+    # p = get_person_object(user_email)
+    # all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+    # # all_todos = [db_todos.todo for db_todos in db.session.query(models.Person).all()]
+    # return p.todos
+    global user_email
+    p = get_person_object(user_email)
+    todos = []
+    start_todos=[]
+    due_dates=[]
     
+    all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+    for todo in all_todos:
+        todos.append(todo.todo)
+        start_todos.append(str(todo.start_todo))
+        due_dates.append(str(todo.due_date))
+        
+    message = {
+            "Todos": todos,
+            "start_todos": start_todos,
+            "due_dates": due_dates
+        }
+    socketio.emit(
+        'sending todo info',
+        message
+    )
+    print(message)
 user_email = ""
 cred = ""
+
 def add_new_todo_to_db(todo,start="",end=""):
     some_person = db.session.query(models.Person).filter_by(email=user_email).first()
     if start == "" and end == "":
@@ -158,6 +210,13 @@ def add_new_todo_to_db(todo,start="",end=""):
         t = models.Todo(todo=todo, person=some_person,start_todo = start, due_date = end)
     db.session.add(t);
     db.session.commit();
+    
+# def delete_todo(id):
+#     global user_email
+#     some_person = db.session.query(models.Person).filter_by(email=user_email).first()
+#     t = db.session.query(models.Todo).filter_by(id=id, person=some_person)
+#     db.session.delete(t);
+#     db.session.commit();
 
 @socketio.on("login with code")
 def login(data):
@@ -193,6 +252,7 @@ def login(data):
     calendar_id = result['items'][0]['id']
     
     result = service.events().list(calendarId=calendar_id).execute()
+    # get_all_todos()
     #print(result['items'])
     
     if user_email not in get_all_emails():
@@ -223,7 +283,9 @@ def loginWithEmail(data):
     cred = person.cred
     print(cred)
     print(cred.token)
+    # get_all_todos()
     
+
     
     
 @socketio.on("addCalendarEvent")
@@ -269,9 +331,9 @@ def addToDoList(data):
     print(startToDo)
     print(endToDo)
     add_new_todo_to_db(desc,startToDo,endToDo)
-    
+    # get_all_todos()
 if __name__ == '__main__':
-    init_db(app)
+    # init_db(app)
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),
