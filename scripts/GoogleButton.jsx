@@ -18,6 +18,7 @@ export default function GoogleButton(params) {
     else
     {
       const { email } = response.profileObj;
+      params.setEmail(email);
       Socket.emit('login with email',
       {
         "email":email
@@ -42,7 +43,7 @@ export default function GoogleButton(params) {
       email,
       profilePic,
     });
-
+    params.setEmail("");
     params.setAuthenticated(false);
   }
   

@@ -1,13 +1,12 @@
 import * as React from 'react';
 import AddCalendarEvent from './AddCalendarEvent';
 import AddToDoList from './AddToDoList';
-export default function AddForm()
+export default function AddForm(params)
 {
-    
+    var email = params.email;
     const [form,setForm] = React.useState();
-    const todoList = React.createElement(AddToDoList,{});
-    var calendarEvent = React.createElement(AddCalendarEvent,{});
-  
+    const todoList = React.createElement(AddToDoList,{"email":email});
+    var calendarEvent = React.createElement(AddCalendarEvent,{"email":email});
     var selectedForm = todoList;
     
     function formPicker(e)

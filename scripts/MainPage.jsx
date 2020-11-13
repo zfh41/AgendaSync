@@ -4,6 +4,8 @@ import AddButton from './AddButton';
 import UserCalendar from './UserCalendar';
 import CalendarButton from './CalendarButton';
 import AgendaButton from './AgendaButton';
+import Socket from './Socket';
+import PhoneNumberForm from './PhoneNumberForm';
 export default function MainPage(params)
 {
     
@@ -18,6 +20,23 @@ export default function MainPage(params)
     
     const [selected,setSelected] = React.useState("");
     
+    function getPhoneNumber()
+    {
+        React.useEffect(() => 
+        {
+            Socket.on('getPhoneNumber', (data) => {
+                console.log("getPhoneNumber");
+                setSelected(React.createElement(PhoneNumberForm,{
+                    "setSelected":setSelected,
+                    "userURL":userURL,
+                    "setUpDefaultLook":setUpDefaultLook,
+                    "email":email
+                }));
+            });
+            
+        },[]);
+    }
+    
     function setUpDefaultLook()
     {
         React.useEffect(()=>{
@@ -28,8 +47,20 @@ export default function MainPage(params)
         },[userURL]);
     }
     
+    function removePhoneForm()
+    {
+        React.useEffect(()=>{
+            Socket.on("Server has phone number",()=>{
+                setSelected(React.createElement(UserCalendar,{"userURL":userURL}));
+            })
+           
+
+        },[userURL]);
+    }
+    
     setUpDefaultLook();
-        
+    getPhoneNumber(); 
+    removePhoneForm();
     return (
         <div>
             <GoogleButton
@@ -51,10 +82,12 @@ export default function MainPage(params)
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <AddButton
                 setSelected={setSelected}
+                email={email}
             />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <AgendaButton
                 setSelected={setSelected}
+                email={email}
             />
         </div>
         

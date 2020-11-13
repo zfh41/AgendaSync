@@ -4,10 +4,11 @@ import ToDoList from './ToDoList';
 export default function AgendaButton(params)
 {
     var { setSelected } = params;
+    var email = params.email;
     function addForm(e)
     {
         e.preventDefault();
-        setSelected(React.createElement(ToDoList,{}));
+        setSelected(React.createElement(ToDoList,{"email":email}));
     }
     return(
         <button onClick={addForm}> 
