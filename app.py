@@ -84,26 +84,17 @@ def bot():
         add_new_todo_to_db(message_body)
         msg.body("Inserted: '" +  message_body + "' into your todolist!")
         responded = True
-        
-    if DELETE_TODO in incoming_msg:
-        msg.body("Please select a todo to delete")
-        msg.body(get_all_todos_values())
-        # message_body = incoming_msg[12:]
-        # msg.body("Deleted: '" +  message_body + "' from your todolist!")
-        # delete_todo(message_body)
-        responded = True
-        
-        #query for message_body in todolist table
-        #if message_body not in table:
-            #msg.body("The event '" + message_body "' cannot be found in your todo list!")
-            #responded = True
-        #else:
-            #delete item from db todolist
-        
-        #message_emit("todolist update")
+    # if DELETE_TODO in incoming_msg and incoming_msg[12:].isnumeric():
+    #     delete_todo(int(incoming_msg[12:]))
+    #     msg.body("Deleting from your todolist!")
+    #     responded = True    
+    # elif DELETE_TODO in incoming_msg:
+    #     msg.body("Please reply with a todo id to delete: 'delete todo id'\n")
+    #     msg.body(get_all_todos_values())
+    #     responded = True
             
     if LIST_TODO in incoming_msg:
-            msg.body("Your todolsit contents are as follows: " + get_all_todos_values())
+            msg.body("Your todo listt contents are as follows: " + get_all_todos_values())
             responded = True
             
     if START_TODO in incoming_msg:
@@ -155,6 +146,15 @@ def get_all_todos_values():
     for todo in all_todos:
         todo_list.append('Id: ' +str(todo.id) +'\nTodo: ' + todo.todo + '\nstart date: ' +str(todo.start_todo) + '\ndue date: ' +str(todo.due_date) + '\n')
     return ' '.join(map(str, todo_list))
+    
+def get_all_todos_ids():
+    global user_email
+    p = get_person_object(user_email)
+    all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+    todo_list_ids = []
+    for todo in all_todos:
+        todo_list_ids.append(str(todo.id))
+    return todo_list_ids
         
 
 def get_person_object(email):
@@ -184,12 +184,12 @@ def add_new_todo_to_db(todo,start="",end=""):
     db.session.add(t);
     db.session.commit();
     
-def delete_todo(todo):
-    global user_email
-    some_person = db.session.query(models.Person).filter_by(email=user_email).first()
-    t = models.Todo(todo=todo, person=some_person)
-    db.session.delete(t);
-    db.session.commit();
+# def delete_todo(id):
+#     global user_email
+#     some_person = db.session.query(models.Person).filter_by(email=user_email).first()
+#     t = db.session.query(models.Todo).filter_by(id=id, person=some_person)
+#     db.session.delete(t);
+#     db.session.commit();
 
 @socketio.on("login with code")
 def login(data):
