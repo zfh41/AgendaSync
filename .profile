@@ -1,0 +1,1 @@
+echo ${CLIENT_SECRET} > /app/client_secret.json

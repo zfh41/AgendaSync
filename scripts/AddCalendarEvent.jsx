@@ -6,10 +6,9 @@ export default function AddCalendarEvent(params)
 {
     const [date,setStartDate] = React.useState(new Date());
     const [input,setInput] = React.useState("");
-
+    var email = params.email;
     function setDate(d)
     {
-       
         setStartDate(dt=>dt=d);
     }
     
@@ -21,7 +20,8 @@ export default function AddCalendarEvent(params)
         var d = date.toISOString();
         Socket.emit("addCalendarEvent",{
             "date":d,
-            "title":input
+            "title":input,
+            "email":email
         });
     }
     
