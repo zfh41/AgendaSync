@@ -1,7 +1,8 @@
 import flask_sqlalchemy
-from app import db
+import app
+# from app import db
 import datetime
-
+db = app.db
 start_date = datetime.datetime.utcnow()
 end_date = start_date + datetime.timedelta(days=1)
 class Person(db.Model):
@@ -18,5 +19,4 @@ class Todo(db.Model):
     start_todo = db.Column(db.DateTime, default=start_date)
     due_date = db.Column(db.DateTime, default=end_date)
 
-def createModels():
-    db.create_all()
+db.create_all()

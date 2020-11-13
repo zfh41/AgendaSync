@@ -15,6 +15,8 @@ from google.auth.transport.requests import Request
 import datetime
 from apiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
+import models
+
 USERS_UPDATED_CHANNEL = 'users updated'
 
 app = flask.Flask(__name__)
@@ -40,9 +42,8 @@ db = flask_sqlalchemy.SQLAlchemy(app)
 def init_db(app):
     db.init_app(app)
     db.app = app
-    models.createModels()
+    # models.createModels()
     db.session.commit()
-import models
 
 
 def message_emit(channel):
@@ -256,7 +257,7 @@ def login(data):
     #print(result['items'])
     
     if user_email not in get_all_emails():
-        add_new_person_to_db(user_email,cred)
+        socketio.emit("getPhoneNumber")
     else:
         print(f"user {user_email} exists")
         update_tokens_in_db(user_email,cred)
@@ -265,7 +266,12 @@ def login(data):
         'calendarUpdate': result['items']
     })
 
-    
+@socketio.on("receivePhoneNumber")
+def receivePhoneNumber(data):
+    add_new_person_to_db(user_email,cred)
+    phone = "+"
+    phone+= data["phone"]
+    print(phone)
 print("user email="+user_email)
 
 @socketio.on("login with email")

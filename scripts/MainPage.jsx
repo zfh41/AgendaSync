@@ -4,6 +4,8 @@ import AddButton from './AddButton';
 import UserCalendar from './UserCalendar';
 import CalendarButton from './CalendarButton';
 import AgendaButton from './AgendaButton';
+import Socket from './Socket';
+import PhoneNumberForm from './PhoneNumberForm';
 export default function MainPage(params)
 {
     
@@ -18,6 +20,22 @@ export default function MainPage(params)
     
     const [selected,setSelected] = React.useState("");
     
+    function getPhoneNumber()
+    {
+        React.useEffect(() => 
+        {
+            Socket.on('getPhoneNumber', (data) => {
+                console.log("getPhoneNumber");
+                setSelected(React.createElement(PhoneNumberForm,{
+                    "setSelected":setSelected,
+                    "userURL":userURL,
+                    
+                }));
+            });
+            
+        });
+    }
+    
     function setUpDefaultLook()
     {
         React.useEffect(()=>{
@@ -29,7 +47,7 @@ export default function MainPage(params)
     }
     
     setUpDefaultLook();
-        
+    getPhoneNumber(); 
     return (
         <div>
             <GoogleButton
