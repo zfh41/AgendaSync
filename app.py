@@ -247,6 +247,33 @@ def update_tokens_in_db(email,cred):
     p.cred = cred
     db.session.commit();
     
+def get_all_todos():
+    # p = get_person_object(user_email)
+    # all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+    # # all_todos = [db_todos.todo for db_todos in db.session.query(models.Person).all()]
+    # return p.todos
+    global user_email
+    p = get_person_object(user_email)
+    todos = []
+    start_todos=[]
+    due_dates=[]
+    
+    all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
+    for todo in all_todos:
+        todos.append(todo.todo)
+        start_todos.append(str(todo.start_todo))
+        due_dates.append(str(todo.due_date))
+        
+    
+    socketio.emit(
+        'sending todo info',
+        {
+            "Todos": todos,
+            "start_todos": start_todos,
+            "due_dates": due_dates
+        },
+    )
+    
 user_email = ""
 cred = ""
 def add_new_todo_to_db(todo,start="",end=""):
@@ -371,7 +398,7 @@ def addToDoList(data):
     add_new_todo_to_db(desc,startToDo,endToDo)
     
 if __name__ == '__main__':
-    init_db(app)
+    # init_db(app)
     socketio.run(
         app,
         host=os.getenv('IP', '0.0.0.0'),

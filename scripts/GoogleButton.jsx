@@ -2,6 +2,7 @@ import * as React from 'react';
 import GoogleLogin from 'react-google-login';
 import { GoogleLogout } from 'react-google-login';
 import Socket from './Socket';
+import ReactDOM from 'react-dom';
 
 export default function GoogleButton(params) {
   const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
@@ -24,6 +25,7 @@ export default function GoogleButton(params) {
     }
     params.setAuthenticated(true);
     params.setCode(code);
+    ReactDOM.render(<Content />, document.getElementById('content'));
   }
 
   function failure() {
@@ -52,7 +54,7 @@ export default function GoogleButton(params) {
     return (
     <GoogleLogin
       className="googleLoginButton"
-      clientId={clientId}
+      clientId="938469198889-n1k7dgf0oagn6qclrv173j31g5joh6rr.apps.googleusercontent.com"
       buttonText="Log in with Google"
       onSuccess={success}
       onFailure={failure}
@@ -72,7 +74,7 @@ export default function GoogleButton(params) {
     <GoogleLogout
       className="googleLogoutButton"
       isSignedIn={false}
-      clientId={clientId}
+      clientId="938469198889-n1k7dgf0oagn6qclrv173j31g5joh6rr.apps.googleusercontent.com"
       buttonText="Logout"
       onLogoutSuccess={logout}
       onFailure={failure}
