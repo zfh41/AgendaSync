@@ -246,7 +246,7 @@ def update_tokens_in_db(email,cred):
     p = get_person_object(email)
     p.cred = cred
     db.session.commit();
-    
+@socketio.on("send todo")
 def get_all_todos():
     # p = get_person_object(user_email)
     # all_todos = db.session.query(models.Todo).filter_by(person_id=p.id).all()
@@ -264,16 +264,16 @@ def get_all_todos():
         start_todos.append(str(todo.start_todo))
         due_dates.append(str(todo.due_date))
         
-    
-    socketio.emit(
-        'sending todo info',
-        {
+    message = {
             "Todos": todos,
             "start_todos": start_todos,
             "due_dates": due_dates
-        },
+        }
+    socketio.emit(
+        'sending todo info',
+        message
     )
-    
+    print(message)
 user_email = ""
 cred = ""
 def add_new_todo_to_db(todo,start="",end=""):
@@ -295,7 +295,6 @@ def login(data):
         'client_secret.json',
         scopes=['openid', 'https://www.googleapis.com/auth/userinfo.email',
         'https://www.googleapis.com/auth/userinfo.profile',
-        'https://www.googleapis.com/auth/calendar.events',
         'https://www.googleapis.com/auth/calendar'],
         redirect_uri = google_uri
         )
@@ -320,6 +319,7 @@ def login(data):
     calendar_id = result['items'][0]['id']
     
     result = service.events().list(calendarId=calendar_id).execute()
+    # get_all_todos()
     #print(result['items'])
     
     if user_email not in get_all_emails():
@@ -350,7 +350,7 @@ def loginWithEmail(data):
     cred = person.cred
     print(cred)
     print(cred.token)
-    
+    # get_all_todos()
     
     
 @socketio.on("addCalendarEvent")
@@ -396,7 +396,7 @@ def addToDoList(data):
     print(startToDo)
     print(endToDo)
     add_new_todo_to_db(desc,startToDo,endToDo)
-    
+    # get_all_todos()
 if __name__ == '__main__':
     # init_db(app)
     socketio.run(

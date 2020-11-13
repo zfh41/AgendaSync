@@ -7,8 +7,7 @@ export default function AgendaButton(params)
     function addForm(e)
     {
         e.preventDefault();
-        setSelected(
-            React.createElement(ToDoList,{}));
+        setSelected(React.createElement(ToDoList,{}));
     }
     return(
         <button onClick={addForm}> 

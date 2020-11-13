@@ -25,7 +25,6 @@ export default function GoogleButton(params) {
     }
     params.setAuthenticated(true);
     params.setCode(code);
-    ReactDOM.render(<Content />, document.getElementById('content'));
   }
 
   function failure() {
@@ -54,7 +53,7 @@ export default function GoogleButton(params) {
     return (
     <GoogleLogin
       className="googleLoginButton"
-      clientId="938469198889-n1k7dgf0oagn6qclrv173j31g5joh6rr.apps.googleusercontent.com"
+      clientId={clientId}
       buttonText="Log in with Google"
       onSuccess={success}
       onFailure={failure}
@@ -74,7 +73,7 @@ export default function GoogleButton(params) {
     <GoogleLogout
       className="googleLogoutButton"
       isSignedIn={false}
-      clientId="938469198889-n1k7dgf0oagn6qclrv173j31g5joh6rr.apps.googleusercontent.com"
+      clientId={clientId}
       buttonText="Logout"
       onLogoutSuccess={logout}
       onFailure={failure}

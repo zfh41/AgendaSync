@@ -1,18 +1,25 @@
 import * as React from 'react';
 
-import { Button } from './Button';
-import { Socket } from './Socket';
+import Socket from './Socket';
 
-export function ToDoList() {
+export default function ToDoList() {
     const [todos, setTodos] = React.useState([]);
     const[startDates, setstartDates] = React.useState([]);
     const[endDates, setEndDates] = React.useState([]);
     let index = 0;
     
-    
+  function sendMessage()
+  {
+    React.useEffect(() => {
+        Socket.emit("send todo");
+    },[]);
+  }
+  
   function getNewAddresses() {
+      console.log("getNewAddresses");
       React.useEffect(() => {
         Socket.on('sending todo info', (data) => {
+          console.log(data);
           setTodos(data['Todos']);
           setstartDates(data['start_todos']);
           setEndDates(data['due_dates']);
@@ -30,7 +37,7 @@ export function ToDoList() {
       )
 
   }
-  
+  sendMessage();
   getNewAddresses();
   
   return (
@@ -49,7 +56,6 @@ export function ToDoList() {
           }
         </ul>
       </div>
-      <Button />
 
       <img alt="Wall-EBot" className="center" src="https://cdn.dribbble.com/users/37530/screenshots/2937858/drib_blink_bot.gif" />
     </div>

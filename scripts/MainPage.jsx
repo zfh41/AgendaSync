@@ -3,6 +3,7 @@ import GoogleButton from './GoogleButton';
 import AddButton from './AddButton';
 import UserCalendar from './UserCalendar';
 import CalendarButton from './CalendarButton';
+import AgendaButton from './AgendaButton';
 export default function MainPage(params)
 {
     
