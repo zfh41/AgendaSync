@@ -7,7 +7,7 @@ end_date = start_date + datetime.timedelta(days=1)
 class Person(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), nullable=False)
-    todos = db.relationship('Todo', backref='person', lazy=True)
+    todos = db.relationship('Todo', backref='person', lazy='dynamic' ) #uselist=False
     cred = db.Column(db.PickleType)
     
     
