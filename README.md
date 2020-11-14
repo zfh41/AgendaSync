@@ -130,19 +130,15 @@ Worked with Zaafira and Surindra to deploy the application to Heroku.
 Used pyLint to lint the backend python code and enforce code style.
 Updated and expanded readme to include new instructions for application deployment.
 
-
 Functionalities that still need to be sorted out on the backend. These include:
-Allowing the server to handle and separate multiple clients during use.
-Separating the textbot into its own class.
-Creating textbot logic for updating the calendar using the API.
-The textbot needs to delete todos
-Fix the socket emit issue (need to update with multiple clients)
-Update todos with the bot
+Allowing the server to handle and separate multiple clients during use,
+separating the textbot into its own class,
+creating textbot logic for updating the calendar using the API,
+the textbot needs to delete todos,
+fix the socket emit issue (need to update with multiple clients),
+update todos with the bot.
 
 Functionalities that still need to be sorted out on the frontend. These include:
-We have to create the landing page
-Have a more aesthetic login page
-The calendar interface with buttons need to be more aesthetic
-
-
-
+We have to create the landing page,
+have a more aesthetic login page,
+the calendar interface with buttons need to be more aesthetic.
