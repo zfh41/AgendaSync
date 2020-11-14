@@ -1,7 +1,10 @@
 `Existing Heroku Link` https://pure-lowlands-90270.herokuapp.com/
 # Project3-agendasync
+**Agendasync** - A calendar application that has a day-to-day task-based agenda system. The application uses a combination of Google calendar and custom methods to combine a calendar and todolist into one intuitive application. Using twilio, we also bring forth a mobile bot that allows a user to update their daily todolist with commands outside of the web application and on the go.
 
 ## Application Setup
+This application uses several components to initialize the application. Starting from a fresh repository clone, you must perform several setup tasks to bring you up to a working repository.
+
 ### Set up React    
 0. `cd ~/environment && git clone https://github.com/NJIT-CS490/project3-agendasync && cd project3-agendasync`    
 1. Install your stuff!    
