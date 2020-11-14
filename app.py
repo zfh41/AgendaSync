@@ -51,7 +51,7 @@ def init_db(APP):
     ''' initialize the database '''
     DB.init_app(APP)
     DB.APP = APP
-    # models.createModels()
+    models.createModels()
     DB.session.commit()
 
 
@@ -194,10 +194,10 @@ def get_all_todos_values(user_email):
 #    return todo_list_ids
 
 
-def get_person_object_phone_number(phone_number):
+def get_person_object_phone_number(phone):
     ''' Query phone number from specific person's table, filter by phone number '''
     some_person = (
-        DB.session.query(models.Person).filter_by(phone_number=phone_number).first()
+        DB.session.query(models.Person).filter_by(phone=phone).first()
     )
     return some_person
 
