@@ -158,8 +158,8 @@ def get_all_todos_ids(user_email):
         todo_list_ids.append(str(todo.id))
     return todo_list_ids
         
-def get_person_object_phone_number(phone_number):
-    some_person = db.session.query(models.Person).filter_by(phone_number=phone_number).first()
+def get_person_object_phone_number(phone):
+    some_person = db.session.query(models.Person).filter_by(phone=phone).first()
     return some_person
     
 def get_person_object(email):
