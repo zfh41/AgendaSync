@@ -1,6 +1,8 @@
 `Existing Heroku Link` https://pure-lowlands-90270.herokuapp.com/
+# Project3-agendasync
 
-# Set up React  
+## Application Setup
+### Set up React    
 0. `cd ~/environment && git clone https://github.com/NJIT-CS490/project3-agendasync && cd project3-agendasync`    
 1. Install your stuff!    
   a) `npm install && npm install -g webpack && npm install --save-dev webpack && npm install socket.io-client --save`    
@@ -13,14 +15,14 @@
 :warning: :warning: :warning: If you see any error messages, make sure you use `sudo pip` or `sudo npm`. If it says "pip cannot be found", run `which pip` and use `sudo [path to pip from which pip] install`  :warning: :warning: :warning:  
 </div>
   
-# Getting PSQL to work with Python  
+### Getting PSQL to work with Python  
   
 1. Update yum: `sudo yum update`, and enter yes to all prompts    
 2. Upgrade pip: `sudo pip install --upgrade pip`  
 3. Get psycopg2: `sudo pip install psycopg2-binary`    
 4. Get SQLAlchemy: `sudo pip install Flask-SQLAlchemy==2.1`    
   
-# Setting up PSQL  
+### Setting up PSQL  
   
 1. Install PostGreSQL: `sudo yum install postgresql postgresql-server postgresql-devel postgresql-contrib postgresql-docs`    
     Enter yes to all prompts.    
@@ -44,7 +46,7 @@
 8. `cd` into `project3-agendasync` and make a new file called `sql.env` and add `SQL_USER=` and `SQL_PASSWORD=` in it  
 9. Fill in those values with the values you put in 7. b)  
   
-# Initializing Google API
+### Initializing Google API
 
 The app uses Google to initialize and authenticate a client.
 1. Create a Google API account at https://console.developers.google.com/apis/dashboard
@@ -56,8 +58,7 @@ The app uses Google to initialize and authenticate a client.
 7. Download a credentials file from your web application and rename it `client_secret.json`, insert it into your directory
 8. Create two files, `react.env` and `redirect.env`, and insert `REACT_APP_GOOGLE_CLIENT_ID='[Google clientId]'` into the former and `export GOOGLE_URI='[local web browser]'` into the latter.
 
-# Initializing Twilio
-
+### Initializing Twilio
 The app uses Twilio to create a mobile bot that allows interaction outside of the application.
 1. Sign up for a free trial account at https://www.twilio.com/try-twilio
 2. Verify your email and phone number. The questions that follow are incosequential but it's suggested you answer those related to the purpose of sending and recieving a message on python.
@@ -68,7 +69,7 @@ The app uses Twilio to create a mobile bot that allows interaction outside of th
 6. Beside the webhook, replace the url with `[your heroku url]/bot/`
 7. Your twilio application should be ready to go after you save.
   
-# Enabling read/write from SQLAlchemy  
+### Enabling read/write from SQLAlchemy  
 There's a special file that you need to enable your db admin password to work for:  
 1. Open the file in vim: `sudo vim /var/lib/pgsql9/data/pg_hba.conf`  
 :warning: :warning: :warning: If that doesn't work: `sudo vim $(psql -c "show hba_file;" | grep pg_hba.conf)`  :warning: :warning: :warning:  
@@ -82,17 +83,7 @@ There's a special file that you need to enable your db admin password to work fo
   d) To communicate with the twilio component, message the phone number `16506676737`
 6. You should just see the same random number as lect10's socket demo.
 
-# Deploying to Heroku
-Sign up for heroku at https://www.heroku.com/.
-1. heroku login -i
-2. heroku create
-3. git push heroku master
-Navigate to your newly created Heroku site.
-Add secret keys from development.env by going to https://dashboard.heroku.com/apps
-Click into your app > Settings > Config Vars > Reveal Config Vars > Add key value pairs for each `.env` variable.
-Configure requirements.txt with all requirements needed to run your app.
-Configure Procfile with the command needed to run your app.
-
+### Deploying to Heroku
 To instead deploy the app on Heroku, there are a few additional steps needed.
 1. Sign up for heroku at https://www.heroku.com/
 2. Install heroku by running `npm install -g heroku`  
@@ -109,3 +100,5 @@ To instead deploy the app on Heroku, there are a few additional steps needed.
 13. Add a new config variable called `CLIENT_SECRET` insert the contents of `client_secret.json` into it.
 14. After restarting all dynos, the application should load but it's likely you won't be able to make it through authorization. Return to your google account and insert the heroku web address into your existing clientID
 15. After saving, the application should successfully deploy from the resulting url! It can also be reached and deployed from your heroku account!
+
+## Engineer Testimonials 
