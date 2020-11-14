@@ -102,3 +102,47 @@ To instead deploy the app on Heroku, there are a few additional steps needed.
 15. After saving, the application should successfully deploy from the resulting url! It can also be reached and deployed from your heroku account!
 
 ## Engineer Testimonials 
+
+**Jason Eccles** - For this MVP I worked mostly with the initial setup and organization and the backed. 
+I was the first project manager so I was responsible for the initial setup and organization of the project.
+I created and set up the trello board, the repository, the boilerplate code to get started, and updated the final proposal.
+I set up the database and the server.
+I created the text bot using twilio and the queries to pull/update information from the database.
+I used eslint on the front end code.
+
+
+**Zaafira Hasan** - For this MVP, I worked mostly on the frontend to have much of the UI design deployed.
+I designed the login page with Surindra and helped the google credentials to be sent to the backend.
+I helped to design the main page and had the personalized Google calendar to show up with the logged-in user.
+I designed the to-do list interface and using flask-socket allowed the information to be sent to the interface.
+Along with Surindra, I helped with unit-testing.
+
+**Surindra Boodhoo** - I created the frontend login page.
+I setup the add calendar and the add todo item forms.
+I worked with Andre to get the users information on login
+Andre,Zaafira, and I worked together to deploy to Heroku.
+Zaafira and I worked together on the unit tests.
+
+**Andre Pugliese** - For this MVP I was able to complete several connective pieces of code within the application.
+I used google calendar API and worked with Surindra to connect the frontend and backend using authentication tokens.
+I sorted out textbot logic and responses prior to database implementation.
+Worked with Zaafira and Surindra to deploy the application to Heroku.
+Used pyLint to lint the backend python code and enforce code style.
+Updated and expanded readme to include new instructions for application deployment.
+
+
+Functionalities that still need to be sorted out on the backend. These include:
+Allowing the server to handle and separate multiple clients during use.
+Separating the textbot into its own class.
+Creating textbot logic for updating the calendar using the API.
+The textbot needs to delete todos
+Fix the socket emit issue (need to update with multiple clients)
+Update todos with the bot
+
+Functionalities that still need to be sorted out on the frontend. These include:
+We have to create the landing page
+Have a more aesthetic login page
+The calendar interface with buttons need to be more aesthetic
+
+
+
