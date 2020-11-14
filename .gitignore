@@ -10,8 +10,6 @@ token.pkl
 .~c9_invoke_3beEZO.py
 redirect.env
 credentials_secret.json
-htmlcov/
-tests/
 .coverage
 tests/mocked_tests.py
 tests/unmocked_tests.py
