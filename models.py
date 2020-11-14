@@ -12,6 +12,7 @@ class Person(DB.Model):
     email = DB.Column(DB.String(120), nullable=False)
     todos = DB.relationship('Todo', backref='person', lazy=True)
     cred = DB.Column(DB.PickleType)
+    phone = DB.Column(DB.String(20))
 class Todo(DB.Model):
     ''' Initialize Todo Table with person_Id/Todo/StartDate/DueDate Columns '''
     id = DB.Column(DB.Integer, primary_key=True)
