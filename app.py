@@ -51,7 +51,7 @@ def init_db(APP):
     ''' initialize the database '''
     DB.init_app(APP)
     DB.APP = APP
-    models.createModels()
+    # models.createModels()
     DB.session.commit()
 
 
