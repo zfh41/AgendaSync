@@ -11,5 +11,3 @@ token.pkl
 redirect.env
 credentials_secret.json
 .coverage
-tests/mocked_tests.py
-tests/unmocked_tests.py
