@@ -34,9 +34,6 @@ load_dotenv(DOTENV_PATH)
 DOTENV_PATH = join(dirname(__file__), "twilio.env")
 load_dotenv(DOTENV_PATH)
 
-TWILIO_ACCOUNT_SID = os.environ["TWILIO_ACCOUNT_SID"]
-TWILIO_AUTH_TOKEN = os.environ["TWILIO_AUTH_TOKEN"]
-
 GOOGLE_URI = os.environ["GOOGLE_URI"]
 
 DATABASE_URI = os.environ["DATABASE_URL"]
